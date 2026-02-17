@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
 const logger = require('../utils/logger')
+
 const initializeDatabase = async () => {
     const mongoURI = process.env.MONGODB_URI
+    
     if (!mongoURI) {
         logger.error('Error: MONGODB_URI is not defined in .env')
         process.exit(1)
