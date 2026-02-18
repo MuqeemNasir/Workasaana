@@ -28,6 +28,7 @@ app.use((req, res, next) => {
 app.use('/auth', require('./routes/auth.routes'))
 app.use('/teams', require('./routes/team.routes'))
 app.use('/projects', require('./routes/project.routes'))
+app.use('/tasks', require('./routes/task.routes'))
 
 
 app.get('/', (req, res) => res.send("Workasana api's are working"))
