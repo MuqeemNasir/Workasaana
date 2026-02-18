@@ -43,9 +43,8 @@ const taskSchema = new mongoose.Schema({
 });
 
 //  Automatically update the `updatedAt` field
-taskSchema.pre('save', function (next) {
-  this.updatedAt = Date.now();
-  next();
+taskSchema.pre('save', function() {
+  this.updatedAt = new Date();
 });
 
 module.exports = mongoose.model('Task', taskSchema);
