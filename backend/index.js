@@ -30,7 +30,7 @@ app.use('/teams', require('./routes/team.routes'))
 app.use('/projects', require('./routes/project.routes'))
 app.use('/tasks', require('./routes/task.routes'))
 app.use('/tags', require('./routes/tag.routes'))
-
+app.use('/users', require('./routes/user.routes'))
 
 app.get('/', (req, res) => res.send("Workasana api's are working"))
 

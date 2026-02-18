@@ -1,14 +1,15 @@
 const User = require('../models/User.model')
 const logger = require('../utils/logger')
 
-const createUser = async (req, res) => {
+const getAllUsers = async (req, res, next) => {
     try{
-        const {name, email, password } = req.body
+        const users = await User.find().select('-password')
 
-        const newUser = new User ({name, email, password})
-        res.status(201).json({message: "New Agent created successfully."})
+        logger.info(`Fetched ${users.length} users`)
+        res.status(200).json(users)
     }catch(error){
-        logger.error("createAgent error: ", error)
-        res.status(500).json({message: "Server error in creating user."})
+        next(error)
     }
 }
+
+module.exports = { getAllUsers }
