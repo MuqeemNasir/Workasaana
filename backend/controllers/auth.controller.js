@@ -2,6 +2,7 @@ const User = require('../models/User.model')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { z } = require('zod')
+const logger = require('../utils/logger')
 
 const signupSchema = z.object({
     name: z.string().min(2, "Name must at least 2 characters"),
@@ -20,12 +21,13 @@ const generateToken = (id) => {
     })
 }
 
-const signupUser = async (req, res) => {
+const signupUser = async (req, res, next) => {
     try {
         const validatedData = signupSchema.parse(req.body)
 
         const userExist = await User.findOne({ email: validatedData.email })
         if (userExist) {
+            logger.warn(`Signup failed: Email ${validatedData.email}`)
             return res.status(400).json({ message: 'User already exists.' })
         }
 
@@ -39,6 +41,8 @@ const signupUser = async (req, res) => {
         })
 
         if (user) {
+            logger.success(`New User Signed Up: ${user.email}`)
+
             res.status(201).json({
                 _id: user.id,
                 name: user.name,
@@ -49,40 +53,41 @@ const signupUser = async (req, res) => {
             res.status(400).json({ message: "Invalid user data." })
         }
     } catch (error) {
-        if (error instanceof z.ZodError) {
-            return res.status(400).json({ errors: error.errors })
-        }
-        res.status(500).json({ message: "Server Error in SignUp." })
+        next(error)
     }
 }
 
 
-const loginUser = async(req, res) => {
-    try{
+const loginUser = async (req, res, next) => {
+    try {
         const validatedData = loginSchema.parse(req.body)
 
-        const user = await User.findOne({email: validatedData.email})
+        const user = await User.findOne({ email: validatedData.email })
 
-        if(user && (await bcrypt.compare(validatedData.password, user.password))){
+        if (user && (await bcrypt.compare(validatedData.password, user.password))) {
+            logger.info(`User Logged In: ${user.email}`)
+
             res.json({
                 _id: user.id,
                 name: user.name,
                 email: user.email,
                 token: generateToken(user.id),
             })
-        }else{
-            res.status(401).json({message: "Invalid email or password."})
+        } else {
+            logger.warn(`Login Failed: Invalid credentials for ${validatedData.email}`)
+            res.status(401).json({ message: "Invalid email or password." })
         }
-    }catch(error){
-        if(error instanceof z.ZodError){
-            return res.status(400).json({errors: error.errors})
-        }
-        res.status(500).json({ message: 'Server Error in User login.'})
+    } catch (error) {
+        next(error)
     }
 }
 
-const getMe = async(req, res) => {
-    res.status(200).json(req.user)
+const getMe = async (req, res, next) => {
+    try{
+        res.status(200).json(req.user)
+    }catch(error){
+        next(error)
+    }
 }
 
-module.exports = { signupUser, loginUser, getMe}
+module.exports = { signupUser, loginUser, getMe }

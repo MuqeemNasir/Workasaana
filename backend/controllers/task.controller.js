@@ -30,8 +30,8 @@ const createTask = async (req, res, next) => {
             return res.status(404).json({ message: "Team not found." })
         }
 
-        const owenersFound = await User.find({ '_id': { $in: validatedData.owners } })
-        if (owenersFound.length !== validatedData.owners.length) {
+        const ownersFound = await User.find({ '_id': { $in: validatedData.owners } })
+        if (ownersFound.length !== validatedData.owners.length) {
             return res.status(400).json({ message: "One or more Owner IDs are invalid." })
         }
 
