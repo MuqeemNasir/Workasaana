@@ -70,7 +70,7 @@ const getAllTasks = async (req, res, next) => {
 const updateTask = async (req, res, next) => {
     try {
         const { id } = req.params
-        const updatedTask = await Task.findByIdAndUpdate(id, req.body, { new: true })
+        const updatedTask = await Task.findByIdAndUpdate(id, req.body, { returnDocument: 'after' })
 
         if (!updatedTask) {
             return res.status(404)
