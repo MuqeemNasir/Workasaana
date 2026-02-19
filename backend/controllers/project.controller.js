@@ -25,13 +25,13 @@ const createProject = async (req, res, next) => {
     }
 }
 
-const getAllProjects = async (req, res) => {
+const getAllProjects = async (req, res, next) => {
     try {
         const projects = await Project.find()
         logger.info(`Fetched ${projects.length} projects`)
         res.status(200).json({ success: true, count: projects.length, data: projects })
     } catch (error) {
-       next()
+       next(error)
     }
 }
 

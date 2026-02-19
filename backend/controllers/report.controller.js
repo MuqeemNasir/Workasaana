@@ -7,7 +7,7 @@ const getCompletedLastWeek = async(req, res, next) => {
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
         const tasks = await Task.find({
-            status: 'Complete',
+            status: 'Completed',
             updatedAt: {$gte: sevenDaysAgo}
         })
 
