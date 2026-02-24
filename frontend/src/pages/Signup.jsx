@@ -1,39 +1,56 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import useAuthStore from "../stores/useAuthStore";
 import { toast } from "react-toastify";
 
-const Login = () => {
+const Signup = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
-  const { login, isLoading } = useAuthStore();
+  const { signup, isLoading } = useAuthStore();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    if(!email || !password){
-        toast.warning('Please fill in all fields to login.')
+    if(!name || !email || !password){
+        toast.warning("Please fill in all fields.")
         return
     }
 
-    const success = await login(email, password);
-    if (success) {
-      navigate("/");
+    if(password.length < 8){
+        toast.warning("Password must be at least 8 characters.")
+        return
     }
-  };
+
+    const success = await signup(name, email, password)
+
+    if(success){
+        navigate('/')
+    }
+  }
 
   return (
     <div className="container-fluid min-vh-100 d-flex justify-content-center align-items-center bg-light">
       <div className="card shadow-lg border-0" style={{ width: "400px" }}>
         <div className="card-body p-4 p-md-5">
-          <h3 className="text-center text-primary fw-bold mb-4">Workasana</h3>
-          <p className="text-center text-muted mb-4">
-            Welcome back! Please Login.
-          </p>
+          <h3 className="text-center text-primary fw-bold mb-4">
+            Create Account
+          </h3>
+          <p className="text-center text-muted mb-4">Join Workasana today.</p>
           <form onSubmit={handleSubmit} noValidate>
+            <div className="mb-3">
+              <label className="form-label fw-semibold">Full Name</label>
+              <input
+                type="text"
+                className="form-control form-control-lg fs-6"
+                placeholder="Muqeem Nasir"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
             <div className="mb-3">
               <label className="form-label fw-semibold">Email Address</label>
               <input
@@ -44,7 +61,7 @@ const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-3">
               <label className="form-label fw-semibold">Password</label>
               <input
                 type="password"
@@ -62,20 +79,19 @@ const Login = () => {
               {isLoading ? (
                 <span>
                   <i className="spinner-border spinner-border-sm me-2"></i>
-                  Loading...
+                  Creating...
                 </span>
               ) : (
-                "Login"
+                "Sign Up"
               )}
             </button>
           </form>
-
           <div className="text-center mt-4">
             <small className="text-muted">
-              New here?{" "}
-              <Link to="/signup" className="text-decoration-none fw-bold">
-                Create Account
-              </Link>
+              Already have an Account?{" "}
+              <Link to="/login" className="text-decoration-none fw-bold">
+                Login
+              </Link>{" "}
             </small>
           </div>
         </div>
@@ -84,4 +100,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup

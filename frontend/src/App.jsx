@@ -12,24 +12,36 @@ import useAuthStore from "./stores/useAuthStore";
 import { useEffect } from "react";
 
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Layout from "./components/Layout";
+import Dashboard from "./pages/Dashboard";
 
 // const Login = () => <h2 className='text-center mt-5'>Login Page</h2>
-const Signup = () => <h2 className="text-center mt-5">Signup Page</h2>;
-const Dashboard = () => {
-  const {logout, user} = useAuthStore()
-  return (
-    <div className="text-center mt-5">
-      <h1>Welcome, {user?.name}</h1>
-      <button className="btn btn-danger mt-3" onClick={logout}>Logout</button>
-    </div>
-  )
-};
+// const Signup = () => <h2 className="text-center mt-5">Signup Page</h2>;
+// const Dashboard = () => {
+//   const {logout, user} = useAuthStore()
+//   return (
+//     <div className="text-center mt-5">
+//       <h1>Welcome, {user?.name}</h1>
+//       <button className="btn btn-danger mt-3" onClick={logout}>Logout</button>
+//     </div>
+//   )
+// };
+
 
 const ProtectedRoute = ({children}) => {
   const { isAuthenticated } = useAuthStore()
   return isAuthenticated ? children : <Navigate to="/login" />
 }
 // const NotFound = () => <h2 className="text-center mt-5">404 Not Found</h2>;
+
+const ProtectedLayout = ({children}) => {
+  return(
+    <ProtectedRoute>
+      <Layout>{children}</Layout>
+    </ProtectedRoute>
+  )
+}
 
 function App() {
   const { checkAuth } = useAuthStore();
@@ -46,9 +58,9 @@ function App() {
         <Route
           path="/"
           element={
-            <ProtectedRoute>
+            <ProtectedLayout>
               <Dashboard />
-            </ProtectedRoute>
+            </ProtectedLayout>
           }
         />
       </Routes>
