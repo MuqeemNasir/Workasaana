@@ -1,58 +1,77 @@
-import { NavLink } from "react-router-dom";
-import useAuthStore from "../stores/useAuthStore";
-import {FaChartPie, FaHome, FaProjectDiagram, FaSignOutAlt, FaUsers} from 'react-icons/fa'
+import { FaChartPie, FaCog, FaFolder, FaSignOutAlt, FaThLarge, FaTimes, FaUsers } from "react-icons/fa"
+import useAuthStore from "../stores/useAuthStore"
+import { NavLink } from "react-router-dom"
 
-const Sidebar = () => {
-  const { logout } = useAuthStore();
+const Sidebar = ({isOpen, onClose}) => {
+  const { logout } = useAuthStore()
 
-  return (
-    <div
-      className="d-flex flex-column p-3 bg-white shadow h-100"
-      style={{ minHeight: "100vh" }}
-    >
-      <a
-        href="/"
-        className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"
-      >
-        <span className="fs-4 fw-bold text-primary">Workasana</span>
-      </a>
-      <hr />
+  const SidebarContent = () => (
+    <div className="d-flex flex-column h-100">
+      <div className="d-flex align-items-center justify-content-between mb-4 px-2 mt-2">
+        <a href="/" className="d-flex align-items-center text-decoration-none">
+          <div className="rounded-3 p-1 me-3 d-flex align-items-center justify-content-center bg-white shadow-sm" style={{width: 38, height: 38}}>
+            <span className="fw-bold fs-5 text-primary">W</span>
+          </div>
+          <span className="fs-4 fw-bold text-white" style={{letterSpacing: '0.5px'}}>Workasana</span>
+        </a>
+        <button className="btn btn-sm text-white-50 d-md-none border-0" onClick={onClose}>
+          <FaTimes size={20} />
+        </button>
+      </div>
 
-      <ul className="nav nav-pills flex-column mb-auto">
-        <li className="nav-item">
-          <NavLink to='/' className={({isActive}) => `nav-link ${isActive ? 'active' : 'link-dark'}`}>
-            <FaHome className="me-2" /> Dashboard 
+      <div className="sidebar-divider"></div>
+
+      <ul className="nav nav-pills flex-column mb-auto gap-1">
+        <li>
+          <NavLink to="/" className="sidebar-link" onClick={onClose}>
+            <FaThLarge className="me-3" /> Dashboard
           </NavLink>
         </li>
-
-        <li className="nav-item">
-          <NavLink to="/projects" className={({isActive}) => `nav-link ${isActive ? 'active' : 'link-dark'}`}>
-            <FaProjectDiagram className="me-2" /> Projects
+        <li>
+          <NavLink to="/projects" className="sidebar-link" onClick={onClose}>
+            <FaFolder className="me-3" /> Projects
           </NavLink>
         </li>
-
-        <li className="nav-item">
-          <NavLink to="/teams" className={({isActive}) => `nav-link ${isActive ? 'active' : 'link-dark'}`}>
-            <FaUsers className="me-2" /> Teams
+        <li>
+          <NavLink to="/teams" className="sidebar-link" onClick={onClose}>
+            <FaUsers className="me-3" /> Teams
           </NavLink>
         </li>
-
-        <li className="nav-item">
-          <NavLink to="/reports" className={({isActive}) => `nav-link ${isActive ? 'active' : 'link-dark'}`}>
-            <FaChartPie className="me-2" /> Reports
+        <li>
+          <NavLink to="/reports" className="sidebar-link" onClick={onClose}>
+            <FaChartPie className="me-3" /> Reports
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/settings" className="sidebar-link" onClick={onClose}>
+            <FaCog className="me-3" /> Settings
           </NavLink>
         </li>
       </ul>
 
-      <hr />
-
-      <div className="dropdown">
-        <button onClick={logout} className="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center">
+      <div className="mt-auto pt-3 border-top" style={{borderColor: 'rgba(255, 255, 255, 0.1)'}}>
+        <button onClick={logout} className="sidebar-link w-100 border-0 bg-transparent d-flex align-items-center justify-content-center p-2 rounded transition-all" style={{color: '#fca5a5', background: 'rgba(255, 0, 0, 0.1)'}}>
           <FaSignOutAlt className="me-2" /> Logout
         </button>
       </div>
     </div>
-  );
-};
+  )
 
-export default Sidebar;
+  return(
+    <>
+      <div className="d-none d-md-flex flex-column p-3 position-fixed top-0 start-0 vh-100 sidebar-dark" style={{width: 'var(--sidebar-width)', zIndex: 1000}}>
+        <SidebarContent />
+      </div>
+
+      {isOpen && (
+        <div className="sidebar-overlay d-md-none" onClick={onClose}></div>
+      )}
+
+      <div className={`sidebar-mobile d-md-none p-3 sidebar-dark ${isOpen ? 'show' : ''}`}>
+        <SidebarContent />
+      </div>
+    </>
+  )
+}
+
+export default Sidebar

@@ -16,6 +16,11 @@ import Signup from "./pages/Signup";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 
+import Projects from './pages/Projects';
+import Team from './pages/Team';
+import ProjectDetails from "./pages/ProjectDetails";
+import TaskDetails from "./pages/TaskDetails";
+
 // const Login = () => <h2 className='text-center mt-5'>Login Page</h2>
 // const Signup = () => <h2 className="text-center mt-5">Signup Page</h2>;
 // const Dashboard = () => {
@@ -63,6 +68,31 @@ function App() {
             </ProtectedLayout>
           }
         />
+        <Route path="/projects" element={
+          <ProtectedLayout>
+            <Projects />
+          </ProtectedLayout>
+        } />
+        <Route path="/projects/:id" element={
+          <ProtectedLayout>
+            <ProjectDetails/>
+          </ProtectedLayout>
+        } />
+        <Route path="/tasks/:id" element={
+          <ProtectedLayout>
+            <TaskDetails/>
+          </ProtectedLayout>
+        } />
+        <Route path="/teams" element={
+          <ProtectedLayout>
+            <Team />
+          </ProtectedLayout>
+        } />
+        <Route path="/reports" element={
+          <ProtectedLayout>
+            <div className="text-center mt-5">Reports Page Coming Soon</div>
+          </ProtectedLayout>
+        } />
       </Routes>
         <ToastContainer position="top-right" autoClose={2000} />
     </Router>
