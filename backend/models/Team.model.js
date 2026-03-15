@@ -8,7 +8,11 @@ const teamSchema = new mongoose.Schema({
   },
   description: { 
     type: String 
-  }
+  },
+  members: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 });
 
 module.exports = mongoose.model('Team', teamSchema);
